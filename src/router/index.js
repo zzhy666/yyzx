@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
+import Loyat from '../views/loyat.vue'
 const routes = [
     {
         path:'/',
@@ -9,6 +10,11 @@ const routes = [
     path:'/login',
     name:'login',
     component:Login
+  },
+{
+    path:'/loyat',
+    name:'loyat',
+    component:Loyat
   }
 
 ]
