@@ -6,10 +6,10 @@
     <el-row>
         <el-col :span="8" :offset="13" class="zt">
             <el-form :model="formData" ref="formData" class="one">
-                <el-input v-model="formData.username" prefix-icon="User" placeholder="请输入用户名" style="height: 60px;"
+                <el-input v-model="formData.username" prefix-icon="User" placeholder="请输入用户名" style="height: 60px"
                     @input="checkButtonStatus"> </el-input>
                 <el-input v-model="formData.password" prefix-icon="tools" placeholder="请输入密码" show-password
-                    style="margin-top: 30px;height: 60px" ; @input="checkButtonStatus"> </el-input>
+                    style="margin-top: 30px;height: 60px"  @input="checkButtonStatus"> </el-input>
                 <el-radio-group v-model="selectusertype" style="margin-top: 30px;">
                     <el-radio :value="1">管理员</el-radio>
                     <el-radio :value="2">护工</el-radio>
