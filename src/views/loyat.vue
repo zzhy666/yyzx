@@ -26,10 +26,10 @@
         <el-icon><DataBoard /></el-icon>
         <span >护理管理</span>
       </template>
-      <el-menu-item index="4-1" @click="gotoNurseItem">护理级别</el-menu-item>
-      <el-menu-item index="4-2">护理项目</el-menu-item>
-      <el-menu-item index="4-2">客户护理设置</el-menu-item>
-      <el-menu-item index="4-2">护理记录</el-menu-item>
+      <el-menu-item index="4-1" @click="gotoNurseLevelem">护理级别</el-menu-item>
+      <el-menu-item index="4-2" @click="gotoNurseItem">护理项目</el-menu-item>
+      <el-menu-item index="4-2" @click="gotoNurseSetting">客户护理设置</el-menu-item>
+      <el-menu-item index="4-2" @click="gotoNurseRecords">护理记录</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="5">
       <template #title>
@@ -79,6 +79,16 @@
     const gotoNurseItem = () => {
     router.push({ name: 'nurseItem' })
     }
+    const gotoNurseLevelem = () => {
+    router.push({ name: 'nurseLevel' })
+    }
+    const gotoNurseRecords = () => {
+    router.push({ name: 'nurseRecords' })
+    }
+    const gotoNurseSetting = () => {
+    router.push({ name: 'nurseSetting' })
+    }
+
     const gotoHealthy = () => {
     router.push({ name: 'healthy' })
     }
