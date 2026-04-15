@@ -5,7 +5,7 @@
     type="card"          
     closable            
     @tab-remove="handleTabRemove"  
-    class="custom-tabs" >
+    class="independent-tabs" >
     <!-- 每个标签页代表一个导航项 -->
     <el-tab-pane label="床位示意图" name="bed-diagram"></el-tab-pane>
     <el-tab-pane label="床位管理" name="bed-management"></el-tab-pane>
@@ -27,64 +27,57 @@
 </script>
 
 <style scoped>
-.custom-tabs {
+.independent-tabs {
   width: 100%;
-  padding: 8px 0; /* 增加上下间距 */
+  padding: 12px 0; /* 增加上下间距 */
 }
 
-/* 深度选择器修改Element Plus默认样式 */
-:deep(.custom-tabs .el-tabs__header) {
-  margin: 0 0 8px; /* 增加底部间距 */
+/* 隐藏默认的底部连接线（关键：去掉 el-tabs__nav 的底部边框） */
+:deep(.independent-tabs .el-tabs__nav) {
+  border-bottom: none !important; /* 去掉底部横线 */
+  display: flex;
+  gap: 8px; /* 标签之间的间距 */
 }
 
-:deep(.custom-tabs .el-tabs__item) {
-  font-size: 16px; /* 增大字体大小（默认14px） */
-  padding: 0  50px; /* 增加水平间距（默认12px） */
-  margin-right: 8px; /* 增加标签间的间距（默认4px） */
-  height: 40px; /* 增加标签高度（默认36px） */
-  line-height: 40px; /* 保持文字垂直居中 */
-  border-radius: 8px 8px 0 0; /* 稍微增大圆角 */
-  transition: all 0.3s ease; /* 平滑过渡效果 */
+/* 每个标签的样式：独立卡片 */
+:deep(.independent-tabs .el-tabs__item) {
+  font-size: 16px; /* 字体大一些 */
+  padding: 10px 24px; /* 增加内边距，让标签更饱满 */
+  margin: 0;
+  border: 1px solid #e4e7ed; /* 边框 */
+  border-radius: 6px; /* 圆角 */
+  background-color: #fff; /* 背景色 */
+  transition: all 0.3s ease; /* 平滑过渡 */
+  position: relative;
+  z-index: 1;
 }
 
-/* 鼠标悬浮效果 - 改为蓝色系 */
-:deep(.custom-tabs .el-tabs__item:hover) {
-  color: #409eff; /* 悬停文字颜色 - Element主题蓝 */
-  background-color: rgba(64, 158, 255, 0.08); /* 浅蓝色背景 */
-  border-color: #c6e2ff; /* 边框颜色变浅蓝 */
+/* 鼠标悬浮效果：边框变色 + 背景色微变 + 阴影 */
+:deep(.independent-tabs .el-tabs__item:hover) {
+  border-color: #409eff; /* 悬浮边框颜色 */
+  background-color: rgba(64, 158, 255, 0.05); /* 悬浮背景色 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 轻微阴影增强立体感 */
+  transform: translateY(-1px); /* 微微上浮，增强交互感 */
 }
 
-/* 激活标签样式 */
-:deep(.custom-tabs .el-tabs__item.is-active) {
-  color: #409eff; /* 激活文字颜色 */
-  background-color: rgba(64, 158, 255, 0.1); /* 激活状态背景 */
-  border-bottom-color: #fff; /* 隐藏底部边框，与背景融合 */
-  font-weight: 600; /* 激活标签文字加粗 */
+/* 选中状态的标签：边框 + 背景 + 阴影 */
+:deep(.independent-tabs .el-tabs__item.is-active) {
+  border-color: #409eff;
+  background-color: #ecf5ff; /* 选中背景色 */
+  color: #409eff; /* 选中文字颜色 */
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.15); /* 选中阴影 */
+  transform: translateY(-1px);
 }
 
-/* 关闭按钮样式 */
-:deep(.custom-tabs .el-tabs__item .is-icon-close) {
-  width: 16px; /* 关闭按钮大小 */
-  height: 16px;
-  font-size: 12px; /* 关闭图标大小 */
-  margin-left: 6px; /* 关闭按钮与文字的间距 */
-  border-radius: 50%; /* 圆形关闭按钮 */
-  transition: all 0.2s;
+/* 关闭按钮的样式（可选：调整大小和颜色） */
+:deep(.independent-tabs .el-tabs__close-btn) {
+  font-size: 14px;
+  margin-left: 8px;
+  color: #909399;
+  transition: color 0.2s;
 }
 
-/* 关闭按钮悬停效果 */
-:deep(.custom-tabs .el-tabs__item .is-icon-close:hover) {
-  background-color: rgba(64, 158, 255, 0.2); /* 浅蓝色背景 */
-  color: #409eff; /* 蓝色关闭图标 */
-  transform: scale(1.1); /* 轻微放大 */
-}
-
-/* 卡片式标签的整体背景和边框 */
-:deep(.custom-tabs .el-tabs__nav) {
-  border: none; /* 移除默认边框 */
-}
-
-:deep(.custom-tabs .el-tabs__nav-wrap) {
-  padding-bottom: 1px; /* 增加底部空间 */
+:deep(.independent-tabs .el-tabs__close-btn:hover) {
+  color: #f56c6c; /* 关闭按钮悬浮变红 */
 }
 </style>

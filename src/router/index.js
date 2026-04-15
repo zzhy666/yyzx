@@ -14,6 +14,8 @@ import NurseHeader from '../views/Nurse/NurseHeader.vue'
 import NurseLevel from '../views/Nurse/NurseLevel.vue'
 import NurseRecords from '../views/Nurse/NurseRecords.vue'
 import NurseSetting from '../views/Nurse/NurseSetting.vue'
+import Clientout from '../views/Clientout.vue'
+import Clientoff from '../views/Clientoff.vue'
 const routes = [
     {
         path:'/',
@@ -43,7 +45,22 @@ const routes = [
         default: Client,   
         header: ClientHeader 
       }
+    },{
+      path:'clientout',
+      name:'clientout',
+      components:{
+        default: Clientout,   
+        header: ClientHeader  
+      }
     },
+    {
+      path:'clientoff',
+      name:'clientoff',
+      components:{
+        default: Clientoff,   
+        header: ClientHeader  
+    },
+  },
     {
       path:'basicdate',
       name:'basicdate',

@@ -18,8 +18,8 @@
         <span >客户管理</span>
       </template>
       <el-menu-item index="3-1" @click="gotoClientDiagram">入住登记</el-menu-item>
-      <el-menu-item index="3-2">外出登记</el-menu-item>
-      <el-menu-item index="3-3">退住登记</el-menu-item>
+      <el-menu-item index="3-2" @click="gotoClientOut">外出登记</el-menu-item>
+      <el-menu-item index="3-3" @click="gotoClientOff">退住登记</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="4">
       <template #title>
@@ -56,7 +56,7 @@
             </div>
             <div class="content">
               <router-view ></router-view>
-                内容
+                
             </div>
         </div>
         </div>
@@ -91,6 +91,12 @@
 
     const gotoHealthy = () => {
     router.push({ name: 'healthy' })
+    }
+    const gotoClientOut =() =>{
+      router.push({ name: 'clientout' })
+    }
+     const gotoClientOff =() =>{
+      router.push({ name: 'clientoff' })
     }
 </script>
 
