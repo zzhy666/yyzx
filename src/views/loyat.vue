@@ -9,7 +9,7 @@
         <el-icon><DataBoard /></el-icon>
         <span >床位管理</span>
       </template>
-      <el-menu-item index="2-1">床位示意图</el-menu-item>
+      <el-menu-item index="2-1" @click="goToBedDiagram">床位示意图</el-menu-item>
       <el-menu-item index="2-2">床位管理</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="3">
@@ -17,7 +17,7 @@
         <el-icon><DataBoard /></el-icon>
         <span >客户管理</span>
       </template>
-      <el-menu-item index="3-1">入住登记</el-menu-item>
+      <el-menu-item index="3-1" @click="gotoClientDiagram">入住登记</el-menu-item>
       <el-menu-item index="3-2">外出登记</el-menu-item>
       <el-menu-item index="3-3">退住登记</el-menu-item>
     </el-sub-menu>
@@ -26,7 +26,7 @@
         <el-icon><DataBoard /></el-icon>
         <span >护理管理</span>
       </template>
-      <el-menu-item index="4-1">护理级别</el-menu-item>
+      <el-menu-item index="4-1" @click="gotoNurseItem">护理级别</el-menu-item>
       <el-menu-item index="4-2">护理项目</el-menu-item>
       <el-menu-item index="4-2">客户护理设置</el-menu-item>
       <el-menu-item index="4-2">护理记录</el-menu-item>
@@ -36,7 +36,7 @@
         <el-icon><DataBoard /></el-icon>
         <span >健康管家</span>
       </template>
-      <el-menu-item index="5-1">设置服务对象</el-menu-item>
+      <el-menu-item index="5-1" @click="gotoHealthy">设置服务对象</el-menu-item>
       <el-menu-item index="5-2">服务关注</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="6">
@@ -44,17 +44,18 @@
         <el-icon><DataBoard /></el-icon>
         <span >用户管理</span>
       </template>
-      <el-menu-item index="6-1">基础数据维护</el-menu-item>
+      <el-menu-item index="6-1" @click="gotoBasicdate">基础数据维护</el-menu-item>
     </el-sub-menu>
     </el-menu>
        </div>
-        <div class="right-side">    
+        <div class="right-side">  
+          <img src="/image/5.png" style="position: relative; left:-600px">
+           
             <div class="top-bar">
-                <p>logo</p>
-                导航栏
+                <router-view name="header"></router-view>
             </div>
             <div class="content">
-                <router-view></router-view>
+              <router-view ></router-view>
                 内容
             </div>
         </div>
@@ -63,6 +64,24 @@
 
 <script setup>
     import {ref,reactive} from 'vue'
+    import { useRouter } from 'vue-router'
+    const router = useRouter()
+
+    const goToBedDiagram = () => {
+    router.push({ name: 'bed' })
+    }
+    const gotoClientDiagram = () => {
+    router.push({ name: 'client' })
+    }
+    const gotoBasicdate = () => {
+    router.push({ name: 'basicdate' })
+    }
+    const gotoNurseItem = () => {
+    router.push({ name: 'nurseItem' })
+    }
+    const gotoHealthy = () => {
+    router.push({ name: 'healthy' })
+    }
 </script>
 
 <style scoped>
