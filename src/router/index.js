@@ -8,9 +8,9 @@ import ClientHeader from '../views/ClientHeader.vue'
 import Basicdata from '../views/Basicdata.vue'
 import BasicdataHeader from '../views/BasicdataHeader.vue'
 import NurseItem from '../views/Nurse/NurseItem.vue'
-import NurseHeader from '../views/Nurse/NurseLevel.vue'
 import Healthy from '../views/Healthy.vue'
 import HealthyHeader from '../views/HealthyHeader.vue'
+import NurseHeader from '../views/Nurse/NurseHeader.vue'
 const routes = [
     {
         path:'/',

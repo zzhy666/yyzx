@@ -1,16 +1,18 @@
 <template>
     <div>
-     <el-menu :default-active="activeIndex"
-  class="el-menu-demo"
-  mode="horizontal"
-  @select="handleSelect">
-  <el-menu-item index="1">床位示意图</el-menu-item>
-  <el-menu-item index="1">床位管理</el-menu-item>
-  <el-menu-item index="1">入住登记</el-menu-item>
-  <el-menu-item index="1">护理记录</el-menu-item>
-  <el-menu-item index="1">外出登记</el-menu-item>
- 
-</el-menu>
+     <el-tabs
+    v-model="activeTab"
+    type="card"          
+    closable            
+    @tab-remove="handleTabRemove"  
+    class="tabs-nav" >
+    <!-- 每个标签页代表一个导航项 -->
+    <el-tab-pane label="床位示意图" name="bed-diagram"></el-tab-pane>
+    <el-tab-pane label="床位管理" name="bed-management"></el-tab-pane>
+    <el-tab-pane label="入住登记" name="check-in"></el-tab-pane>
+    <el-tab-pane label="护理记录" name="nursing-record"></el-tab-pane>
+    <el-tab-pane label="外出登记" name="out-register"></el-tab-pane>
+  </el-tabs>
 </div>
 </template>
 
@@ -18,6 +20,10 @@
     import {ref,reactive} from 'vue'
     import {useRouter} from 'vue-router'
     import loyat from './loyat.vue';
+    const activeTab = ref('bed-diagram')
+    const handleTabRemove = (targetName) => {
+    console.log('关闭标签:', targetName)
+    }
 </script>
 
 <style scoped>
