@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Loyat from '../views/loyat.vue'
+import Bed from '../views/Bed.vue'
 const routes = [
     {
         path:'/',
@@ -14,7 +15,13 @@ const routes = [
 {
     path:'/loyat',
     name:'loyat',
-    component:Loyat
+    component:Loyat,
+    children:[{
+      path:'/bed',
+      name:'bed',
+      component:Bed
+    },
+  ]
   }
 
 ]
