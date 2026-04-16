@@ -5,70 +5,22 @@
       <h3>东软颐养中心</h3>
       <img src="/image/1.jpg" width="150" height="150" alt="Logo">
       <el-menu default-active="3-1" class="dhl">
-        <el-sub-menu index="2">
-          <template #title>
-            <el-icon><DataBoard /></el-icon>
-            <span>床位管理</span>
-          </template>
-          <el-menu-item index="2-1" @click="goToBedDiagram">床位示意图</el-menu-item>
-          <el-menu-item index="2-2" @click="gotoBedmanagement">床位管理</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="3">
-          <template #title>
-            <el-icon><User /></el-icon>
-            <span>客户管理</span>
-          </template>
-          <el-menu-item index="3-1" @click="gotoClientDiagram">入住登记</el-menu-item>
-          <el-menu-item index="3-2" @click="gotoClientOut">外出登记</el-menu-item>
-          <el-menu-item index="3-3" @click="gotoClientOff">退住登记</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="4">
-          <template #title>
-            <el-icon><FirstAidKit /></el-icon>
-            <span>护理管理</span>
-          </template>
-          <el-menu-item index="4-1" @click="gotoNurseLevelem">护理级别</el-menu-item>
-          <el-menu-item index="4-2" @click="gotoNurseItem">护理项目</el-menu-item>
-          <el-menu-item index="4-3" @click="gotoNurseSetting">客户护理设置</el-menu-item>
-          <el-menu-item index="4-4" @click="gotoNurseRecords">护理记录</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="5">
-          <template #title>
-            <el-icon><Monitor /></el-icon>
-            <span>健康管家</span>
-          </template>
-          <el-menu-item index="5-1" @click="gotoHealthy">设置服务对象</el-menu-item>
-          <el-menu-item index="5-2">服务关注</el-menu-item>
-        </el-sub-menu>
-
-        <el-sub-menu index="6">
-          <template #title>
-            <el-icon><Setting /></el-icon>
-            <span>用户管理</span>
-          </template>
-          <el-menu-item index="6-1" @click="gotoBasicdate">基础数据维护</el-menu-item>
-        </el-sub-menu>
+        <el-sub-menu index="1">
+      <template #title>
+        <el-icon><Document /></el-icon>
+        <span >护工页面</span>
+      </template>
+    </el-sub-menu>
       </el-menu>
     </div>
 
     <!-- 右侧主内容区 -->
     <div class="right-side">
-      <!-- 背景装饰图 -->
-      <img src="/image/5.png" style="position: relative; left:-600px">
 
+    
       <!-- 顶部 Tab 栏 -->
-      <div class="top-bar">
-        <el-tabs v-model="activeTab" type="card" closable @tab-remove="handleTabRemove" class="independent-tabs">
-          <el-tab-pane name="bed" label="床位示意图"></el-tab-pane>
-          <el-tab-pane name="bedmanagement" label="床位管理"></el-tab-pane>
-          <el-tab-pane name="client" label="入住登记"></el-tab-pane>
-          <el-tab-pane name="nurseRecord" label="护理记录"></el-tab-pane>
-          <el-tab-pane name="clientout" label="外出登记"></el-tab-pane>
-        </el-tabs>
-      </div>
+       <img src="/image/5.png" style="position:relative; left: -600px;"></img>
+     <p class="wenzi">欢迎登录护工页面{{  }}</p>
 
       <!-- 内容区域：根据 currentView 动态显示不同页面 -->
       <div class="content">
@@ -413,18 +365,8 @@ const handleTabRemove = (targetName) => {
   flex-direction: column;
   border: 1px solid grey;
   box-sizing: border-box;
-  position: relative;
 }
 
-/* 背景图定位 */
-.right-side > img {
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 0;
-  opacity: 0.1;
-  pointer-events: none;
-}
 
 .top-bar {
   height: 60px;
@@ -456,10 +398,9 @@ h3 {
   font-size: 20px;
 }
 
-.left-side img {
+ img {
   margin: 0 auto;
-  display: block;
-}
+ }
 
 /* 通用页面容器 */
 .view-container {
@@ -561,5 +502,11 @@ h3 {
   border-color: #409eff;
   background-color: #ecf5ff;
   color: #409eff;
+}
+.wenzi{
+  color: red;
+  font-size: 16pxpx;
+  position: relative;
+  left: 50px;
 }
 </style>

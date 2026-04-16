@@ -80,6 +80,8 @@ export default {
                         type: 'success',
                         duration: 5000,
                     });
+                    localStorage.setItem('currentUsername', this.formData.username);
+                    localStorage.setItem('userType', this.selectusertype === 1 ? '管理员' : '护工');
                     if (this.selectusertype === 1) {
                    this.$router.push('/loyat');  
                 } else {

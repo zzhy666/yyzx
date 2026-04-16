@@ -14,7 +14,7 @@
     </el-sub-menu>
     <el-sub-menu index="3">
       <template #title>
-        <el-icon><DataBoard /></el-icon>
+        <el-icon><User /></el-icon>
         <span >客户管理</span>
       </template>
       <el-menu-item index="3-1" @click="gotoClientDiagram">入住登记</el-menu-item>
@@ -23,7 +23,7 @@
     </el-sub-menu>
     <el-sub-menu index="4">
       <template #title>
-        <el-icon><DataBoard /></el-icon>
+         <el-icon><FirstAidKit /></el-icon>
         <span >护理管理</span>
       </template>
       <el-menu-item index="4-1" @click="gotoNurseLevelem">护理级别</el-menu-item>
@@ -33,7 +33,7 @@
     </el-sub-menu>
     <el-sub-menu index="5">
       <template #title>
-        <el-icon><DataBoard /></el-icon>
+        <el-icon><Monitor /></el-icon>
         <span >健康管家</span>
       </template>
       <el-menu-item index="5-1" @click="gotoHealthy">设置服务对象</el-menu-item>
@@ -41,11 +41,12 @@
     </el-sub-menu>
     <el-sub-menu index="6">
       <template #title>
-        <el-icon><DataBoard /></el-icon>
+        <el-icon><Setting /></el-icon>
         <span >用户管理</span>
       </template>
       <el-menu-item index="6-1" @click="gotoBasicdate">基础数据维护</el-menu-item>
     </el-sub-menu>
+    
     </el-menu>
        </div>
         <div class="right-side">  
@@ -58,7 +59,7 @@
     type="card"          
     closable            
     @tab-remove="handleTabRemove"  
-    class="independent-tabs" >
+    class="independent-tabs" style="position: relative;top:20px;" >
     <el-tab-pane name="bed">
         <template #label>
           <div @click="goToBedDiagram">床位示意图</div>
@@ -88,6 +89,22 @@
         </template>
       </el-tab-pane>
   </el-tabs>
+  <div class="welcome-section" style="position: relative; left: 1500px;top: -120px;">
+          <el-icon><User /></el-icon>
+          <span class="welcome-text">欢迎，{{ currentUsername }}！</span>
+          <el-tag type="info" size="small" style="margin-left: 8px;">
+            {{ userType }}
+          </el-tag>
+          <el-button 
+            type="danger" 
+            size="small" 
+            @click="handleLogout"
+            style="margin-left: 10px;"
+          >
+            退出
+          </el-button>
+        </div>
+      
 </div>
 </div>
             <div class="content">
@@ -100,10 +117,55 @@
 </template>
 
 <script setup>
-    import {ref,reactive} from 'vue'
+    import {ref,reactive ,onMounted} from 'vue'
     import { useRouter } from 'vue-router'
+    import { ElMessageBox } from 'element-plus'
+   import { User } from '@element-plus/icons-vue'
     const router = useRouter()
+const activeTab = ref('client')
 
+// 用户信息
+const currentUsername = ref('')
+const userType = ref('')
+
+// 页面加载时获取用户信息
+onMounted(() => {
+  const username = localStorage.getItem('currentUsername')
+  const type = localStorage.getItem('userType')
+  
+  if (username) {
+    currentUsername.value = username
+    userType.value = type || '管理员'
+  } else {
+    // 如果没有登录信息，跳转到登录页
+    router.push('/login')
+  }
+})
+
+// 标签页关闭处理
+const handleTabRemove = (targetName) => {
+  console.log('关闭标签:', targetName)
+  // 如果关闭的是当前激活的标签页，默认跳转到床位示意图
+  if (targetName === activeTab.value) {
+    activeTab.value = 'bed'
+  }
+}
+
+// 退出登录
+const handleLogout = () => {
+  ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 清除登录信息
+    localStorage.removeItem('currentUsername')
+    localStorage.removeItem('userType')
+    
+    // 跳转到登录页
+    router.push('/login')
+  })
+}
     const goToBedDiagram = () => {
     router.push({ name: 'bed' })
     }
@@ -174,6 +236,28 @@ box-sizing: border-box;
   align-items: center;
   padding: 0 20px;
   border-bottom: 1px solid grey;
+  justify-content: space-between; 
+}
+.welcome-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f0f9ff;
+  border-radius: 6px;
+  border: 1px solid #d9ecff;
+  white-space: nowrap; /* 防止换行 */
+}
+
+.welcome-section .el-icon {
+  color: #409eff;
+  font-size: 18px;
+}
+
+.welcome-text {
+  color: #409eff;
+  font-weight: 500;
+  font-size: 14px;
 }
 .content{
   flex: 1;
@@ -196,7 +280,7 @@ h3{
 img{
     margin: 0 auto;
 }
-independent-tabs {
+.independent-tabs {
   width: 100%;
   padding: 12px 0; /* 增加上下间距 */
 }
