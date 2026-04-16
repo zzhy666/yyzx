@@ -80,7 +80,11 @@ export default {
                         type: 'success',
                         duration: 5000,
                     });
-                     this.$router.push('/loyat');
+                    if (this.selectusertype === 1) {
+                   this.$router.push('/loyat');  
+                } else {
+                   this.$router.push('/hugong');
+                }
                 }
                
                 

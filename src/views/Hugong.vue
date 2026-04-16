@@ -91,7 +91,7 @@
 </div>
 </div>
             <div class="content">
-              <router-view ></router-view>
+             内容
                 
             </div>
         </div>
@@ -104,40 +104,7 @@
     import { useRouter } from 'vue-router'
     const router = useRouter()
 
-    const goToBedDiagram = () => {
-    router.push({ name: 'bed' })
-    }
-    const gotoClientDiagram = () => {
-    router.push({ name: 'client' })
-    }
-    const gotoBasicdate = () => {
-    router.push({ name: 'basicdate' })
-    }
-    const gotoNurseItem = () => {
-    router.push({ name: 'nurseItem' })
-    }
-    const gotoNurseLevelem = () => {
-    router.push({ name: 'nurseLevel' })
-    }
-    const gotoNurseRecords = () => {
-    router.push({ name: 'nurseRecords' })
-    }
-    const gotoNurseSetting = () => {
-    router.push({ name: 'nurseSetting' })
-    }
-
-    const gotoHealthy = () => {
-    router.push({ name: 'healthy' })
-    }
-    const gotoClientOut =() =>{
-      router.push({ name: 'clientout' })
-    }
-     const gotoClientOff =() =>{
-      router.push({ name: 'clientoff' })
-    }
-    const gotoBedmanagement =() =>{
-      router.push({ name: 'bedmanagement' })
-    }
+    
 </script>
 
 <style scoped>

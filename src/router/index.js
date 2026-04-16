@@ -17,6 +17,7 @@ import NurseSetting from '../views/Nurse/NurseSetting.vue'
 import Clientout from '../views/Clientout.vue'
 import Clientoff from '../views/Clientoff.vue'
 import BedManagement from '../views/BedManagement.vue'
+import Hugong from '../views/hugong.vue'
 const routes = [
     {
         path:'/',
@@ -26,6 +27,11 @@ const routes = [
     path:'/login',
     name:'login',
     component:Login
+  },
+  {
+    path:'/hugong',
+    name:'hugong',
+    component:Hugong
   },
 {
     path:'/loyat',
