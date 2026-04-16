@@ -9,14 +9,15 @@ import loyat from '../loyat.vue';
 // --- 1. 纯前端静态数据定义 ---
 
 // 初始表格数据 (护理级别列表)
-const initialTableData = [
+// 注意：为了支持搜索和新增后的一致性，我们将作为数据源
+const initialTableData = reactive([
   { id: 1, levelName: '特级护理', levelStatus: 1, createDate: '2023-01-01' },
   { id: 2, levelName: '一级护理', levelStatus: 1, createDate: '2023-01-02' },
   { id: 3, levelName: '二级护理', levelStatus: 0, createDate: '2023-01-03' },
   { id: 4, levelName: '三级护理', levelStatus: 1, createDate: '2023-01-04' },
   { id: 5, levelName: '重症监护', levelStatus: 1, createDate: '2023-01-05' },
   { id: 6, levelName: '普通护理', levelStatus: 1, createDate: '2023-01-06' },
-];
+]);
 
 // 静态房间数据
 const staticRoomList = [
@@ -36,12 +37,13 @@ const staticBedList = [
 
 // --- 2. 响应式状态定义 ---
 
-// 表格显示的数据 (从初始数据复制一份)
-let tableData = reactive([...initialTableData]);
+// 表格显示的数据 (从初始数据复制一份用于分页展示)
+let tableData = reactive([]);
 
 // 弹窗控制
 let changeDialogvisible = ref(false);
 let reviseDialogvisible = ref(false);
+let addDialogVisible = ref(false); // 新增弹窗控制
 
 // 分页参数 (纯前端分页逻辑需要用到)
 let queryParam = reactive({
@@ -86,19 +88,25 @@ let reviseData = reactive({
   }
 });
 
+// 新增护理级别表单数据
+let formData = reactive({
+  levelName: '',
+  levelStatus: 1 // 默认启用
+});
+
 // 下拉框选项数据
 let roomList = reactive([]);
 let bedList = reactive([]);
 
 // --- 3. 纯前端逻辑函数 ---
 
-// 初始化加载数据
+// 初始化加载数据 / 刷新数据
 function BedInfoData() {
   // 1. 前端过滤 (如果搜索框有值)
-  let filteredData = initialTableData;
+  let filteredData = [...initialTableData]; // 使用展开运算符创建副本，避免直接修改源数据影响其他逻辑
   if (queryParam.bedDetailsVo.customerName) {
     const keyword = queryParam.bedDetailsVo.customerName.toLowerCase();
-    filteredData = initialTableData.filter(item => 
+    filteredData = filteredData.filter(item => 
       item.levelName.toLowerCase().includes(keyword)
     );
   }
@@ -139,6 +147,46 @@ function handleNextClick(val) {
 function btnQuery() {
   queryParam.pageInfoVo.currentPage = 1; // 重置到第一页
   BedInfoData();
+}
+
+// --- 新增护理级别逻辑 ---
+
+function showAddDialog() {
+  addDialogVisible.value = true;
+  // 重置表单
+  formData.levelName = '';
+  formData.levelStatus = 1;
+}
+
+function saveNewLevel() {
+  if (!formData.levelName.trim()) {
+    ElMessage.warning('请输入护理级别名称');
+    return;
+  }
+
+  // 生成新的 ID（取当前最大ID + 1）
+  const maxId = initialTableData.length > 0 ? Math.max(...initialTableData.map(item => item.id)) : 0;
+  const newId = maxId + 1;
+
+  // 创建新对象
+  const newLevel = {
+    id: newId,
+    levelName: formData.levelName,
+    levelStatus: formData.levelStatus,
+    createDate: new Date().toISOString().split('T')[0]
+  };
+
+  // 添加到源数据中 (这样搜索也能搜到)
+  initialTableData.push(newLevel);
+
+  // 关闭弹窗
+  addDialogVisible.value = false;
+
+  // 刷新列表显示
+  // 如果当前不在第一页，且新增导致页数变化，可能需要调整页码，这里简单重置到第一页或保持当前页刷新
+  BedInfoData(); 
+
+  ElMessage.success('护理级别添加成功！');
 }
 
 // --- 调换床位逻辑 ---
@@ -250,8 +298,10 @@ const handleSaveConfirm = () => {
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <el-button @click="btnQuery" type="primary">查询</el-button>
+              <!-- 新增添加按钮 -->
+              <el-button @click="showAddDialog" type="success" style="margin-left: 10px;">添加</el-button>
             </el-col>
           </el-row>
         </div>
@@ -291,6 +341,27 @@ const handleSaveConfirm = () => {
       </el-main>
     </el-container>
   </div>
+
+  <!-- 新增护理级别弹窗 -->
+  <el-dialog v-model="addDialogVisible" title="添加护理级别" width="400px">
+    <el-form :model="formData" label-width="80px">
+      <el-form-item label="护理级别">
+        <el-input v-model="formData.levelName" placeholder="请输入护理级别名称"></el-input>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="formData.levelStatus" style="width: 100%">
+          <el-option label="启用" :value="1"></el-option>
+          <el-option label="禁用" :value="0"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveNewLevel">保存</el-button>
+      </span>
+    </template>
+  </el-dialog>
 
   <!-- 调换床位弹窗 -->
   <el-dialog v-model="changeDialogvisible" title="调换床位" width="400px">

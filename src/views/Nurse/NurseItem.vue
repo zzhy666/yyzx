@@ -1,7 +1,7 @@
 <script setup lang="js">
 import { reactive, ref, computed } from 'vue';
 import { ElMessage } from 'element-plus';
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router';
 import loyat from '../loyat.vue';
 
 // ================= 1. 静态数据定义 (Mock Data) =================
@@ -46,6 +46,18 @@ let rightQueryParam = reactive({
   }
 });
 
+// --- 新增弹窗状态 ---
+let addDialogVisible = ref(false);
+let formData = reactive({
+  serialNumber: '',
+  nursingName: '',
+  servicePrice: '',
+  executionCycle: '每日',
+  executionTimes: '',
+  description: '',
+  status: '启用'
+});
+
 // ================= 3. 核心逻辑函数 =================
 
 // --- 左侧：渲染表格数据 (包含搜索和分页) ---
@@ -79,7 +91,6 @@ renderLeftTable();
 
 // --- 右侧：渲染表格数据 (仅分页，暂不加搜索以简化) ---
 function renderRightTable() {
-  // 这里假设右侧数据源固定为 levelOneItems，实际项目中可能根据左侧点击变化
   const sourceData = levelOneItems; 
   
   rightQueryParam.pageInfoVo.total = sourceData.length;
@@ -94,6 +105,65 @@ function renderRightTable() {
 
 // 初始化加载右侧
 renderRightTable();
+
+// --- 新增护理项目 ---
+function showAddDialog() {
+  addDialogVisible.value = true;
+  // 重置表单
+  formData.serialNumber = '';
+  formData.nursingName = '';
+  formData.servicePrice = '';
+  formData.executionsTimes = '';
+  formData.description = '';
+  formData.status = '启用';
+}
+
+function saveNewItem() {
+  if (!formData.serialNumber.trim()) {
+    ElMessage.warning('请输入编号');
+    return;
+  }
+  if (!formData.nursingName.trim()) {
+    ElMessage.warning('请输入名称');
+    return;
+  }
+  if (!formData.servicePrice) {
+    ElMessage.warning('请输入价格');
+    return;
+  }
+  if (!formData.executionsTimes) {
+    ElMessage.warning('请输入执行次数');
+    return;
+  }
+
+  // 生成新的 ID
+  const newId = Math.max(...allNursingItems.map(item => item.id)) + 1;
+
+  // 创建新对象
+  const newItem = {
+    id: newId,
+    serialNumber: formData.serialNumber,
+    nursingName: formData.nursingName,
+    servicePrice: Number(formData.servicePrice),
+    executionCycle: formData.executionsTimes,
+    executionTimes: Number(formData.executionsTimes),
+    description: formData.description,
+    level: '一级', // 默认为一级，可根据需要调整
+    status: formData.status
+  };
+
+  // 添加到源数据中
+  allNursingItems.push(newItem);
+
+  // 关闭弹窗
+  addDialogVisible.value = false;
+
+  // 刷新左侧列表
+  leftQueryParam.pageInfoVo.currentPage = 1; // 重置到第一页
+  renderLeftTable();
+
+  ElMessage.success('护理项目添加成功！');
+}
 
 // ================= 4. 事件处理 =================
 
@@ -163,6 +233,8 @@ function indexMethodRecord(index) {
             </el-col>
             <el-col :span="6">
               <el-button @click="btnQuery" type="primary">查询</el-button>
+              <!-- 新增按钮 -->
+              <el-button @click="showAddDialog" type="success" style="margin-left: 10px;">添加</el-button>
             </el-col>
           </el-row>
         </div>
@@ -257,6 +329,49 @@ function indexMethodRecord(index) {
       </el-main>
     </el-container>
   </div>
+
+  <!-- 添加护理项目弹窗 -->
+  <el-dialog v-model="addDialogVisible" title="添加/编辑护理项目" width="500px">
+    <el-form :model="formData" label-width="80px">
+      <el-form-item label="编号">
+        <el-input v-model="formData.serialNumber" placeholder="请输入编号"></el-input>
+      </el-form-item>
+      <el-form-item label="名称">
+        <el-input v-model="formData.nursingName" placeholder="请输入名称"></el-input>
+      </el-form-item>
+      <el-form-item label="价格">
+        <el-input v-model.number="formData.servicePrice" placeholder="请输入价格"></el-input>
+      </el-form-item>
+      <el-form-item label="执行周期">
+        <el-select v-model="formData.executionsTimes" style="width: 100%">
+          <el-option label="每日" value="每日"></el-option>
+          <el-option label="每2小时" value="每2小时"></el-option>
+          <el-option label="每日三餐" value="每日三餐"></el-option>
+          <el-option label="每周2次" value="每周2次"></el-option>
+          <el-option label="每周1次" value="每周1次"></el-option>
+          <el-option label="每晚" value="每晚"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="执行次数">
+        <el-input v-model.number="formData.executionsTimes" placeholder="请输入执行次数"></el-input>
+      </el-form-item>
+      <el-form-item label="描述">
+        <el-input v-model="formData.description" placeholder="请输入描述"></el-input>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select v-model="formData.status" style="width: 100%">
+          <el-option label="启用" value="启用"></el-option>
+          <el-option label="停用" value="停用"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveNewItem">保存</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style lang="css" scoped>
