@@ -7,11 +7,34 @@
     @tab-remove="handleTabRemove"  
     class="independent-tabs" >
     <!-- 每个标签页代表一个导航项 -->
-    <el-tab-pane label="床位示意图" name="bed-diagram"></el-tab-pane>
-    <el-tab-pane label="床位管理" name="bed-management"></el-tab-pane>
-    <el-tab-pane label="入住登记" name="check-in"></el-tab-pane>
-    <el-tab-pane label="护理记录" name="nursing-record"></el-tab-pane>
-    <el-tab-pane label="外出登记" name="out-register"></el-tab-pane>
+    <el-tab-pane name="bed">
+        <template #label>
+          <div @click="">床位示意图</div>
+        </template>
+      </el-tab-pane>
+    <el-tab-pane name="bedmanagement">
+        <template #label>
+          <div @click="">床位管理</div>
+        </template>
+      </el-tab-pane>
+
+      <el-tab-pane name="client">
+        <template #label>
+          <div @click="">入住登记</div>
+        </template>
+      </el-tab-pane>
+
+      <el-tab-pane name="nurseRecord">
+        <template #label>
+          <div @click="">护理记录</div>
+        </template>
+      </el-tab-pane>
+
+      <el-tab-pane name="clientout">
+        <template #label>
+          <div @click="">外出登记</div>
+        </template>
+      </el-tab-pane>
   </el-tabs>
 </div>
 </template>
@@ -20,10 +43,12 @@
     import {ref,reactive} from 'vue'
     import {useRouter} from 'vue-router'
     import loyat from './loyat.vue';
+   import router from '../router';
     const activeTab = ref('bed-diagram')
     const handleTabRemove = (targetName) => {
     console.log('关闭标签:', targetName)
     }   
+    
 </script>
 
 <style scoped>

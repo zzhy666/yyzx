@@ -16,6 +16,7 @@ import NurseRecords from '../views/Nurse/NurseRecords.vue'
 import NurseSetting from '../views/Nurse/NurseSetting.vue'
 import Clientout from '../views/Clientout.vue'
 import Clientoff from '../views/Clientoff.vue'
+import BedManagement from '../views/BedManagement.vue'
 const routes = [
     {
         path:'/',
@@ -37,6 +38,14 @@ const routes = [
         default: Bed,   
         header: BedHeader 
       }
+    },
+    {
+      path:'bedmanagement',
+      name:'bedmanagement',
+      components:{
+      default: BedManagement,
+      header: BedHeader 
+    }
     },
     {
       path:'client',
