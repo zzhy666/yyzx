@@ -6,36 +6,34 @@
       <img src="/image/1.jpg" width="150" height="150" alt="Logo">
       <el-menu default-active="3-1" class="dhl">
         <el-sub-menu index="1">
-      <template #title>
-        <el-icon><Document /></el-icon>
-        <span >护工页面</span>
-      </template>
-    </el-sub-menu>
+          <template #title>
+            <el-icon><Document /></el-icon>
+            <span>护工页面</span>
+          </template>
+        </el-sub-menu>
       </el-menu>
     </div>
 
     <!-- 右侧主内容区 -->
     <div class="right-side">
-
-    
       <!-- 顶部 Tab 栏 -->
-       <img src="/image/5.png" style="position:relative; left: -600px;"></img>
-     <p class="wenzi">欢迎登录护工页面{{  }}</p>
-     <div class="welcome-section" style="position: relative;left: 1500px;top: -120px; ">
-          <el-icon><User /></el-icon>
-          <span class="welcome-text">欢迎，{{ currentUsername }}！</span>
-          <el-tag type="info" size="small" style="margin-left: 8px;">
-            {{ userType }}
-          </el-tag>
-          <el-button 
-            type="danger" 
-            size="small" 
-            @click="handleLogout"
-            style="margin-left: 10px;"
-          >
-            退出
-          </el-button>
-        </div>
+      <img src="/image/5.png" style="position:relative; left: -600px;"></img>
+      <p class="wenzi">欢迎登录护工页面{{ }}</p>
+      <div class="welcome-section" style="position: relative;left: 1500px;top: -120px; ">
+        <el-icon><User /></el-icon>
+        <span class="welcome-text">欢迎，{{ currentUsername }}！</span>
+        <el-tag type="info" size="small" style="margin-left: 8px;">
+          {{ userType }}
+        </el-tag>
+        <el-button 
+          type="danger" 
+          size="small" 
+          @click="handleLogout"
+          style="margin-left: 10px;"
+        >
+          退出
+        </el-button>
+      </div>
 
       <!-- 内容区域：根据 currentView 动态显示不同页面 -->
       <div class="content">
@@ -64,11 +62,7 @@
                   <el-tag size="small">{{ row.level }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="120" align="center">
-                <template #default="{ row }">
-                  <el-button size="small" type="primary" @click="openCareDialog(row)">日常护理</el-button>
-                </template>
-              </el-table-column>
+              <!-- 已删除“日常护理”按钮列，因为对应的弹窗逻辑已移除 -->
             </el-table>
           </div>
 
@@ -83,171 +77,22 @@
           </div>
         </div>
 
-        <!-- ================= 图二：护理记录列表 ================= -->
-        <div v-else-if="currentView === 'nurse'" class="view-container">
-          <div class="page-header">
-            <el-button type="primary" icon="ArrowLeft" @click="backToList">返回</el-button>
-            <span class="page-title">护理记录列表</span>
-          </div>
-          
-          <div class="table-container">
-            <el-table :data="nurseRecordList" style="width: 100%" border stripe>
-              <el-table-column prop="id" label="序号" width="80" align="center"></el-table-column>
-              <el-table-column prop="customerName" label="客户" align="center"></el-table-column>
-              <el-table-column prop="projectName" label="护理项目" align="center"></el-table-column>
-              <el-table-column prop="quantity" label="数量" width="80" align="center"></el-table-column>
-              <el-table-column prop="content" label="护理内容" align="center"></el-table-column>
-              <el-table-column prop="operator" label="护理人员" width="100" align="center"></el-table-column>
-              <el-table-column prop="time" label="护理时间" width="180" align="center"></el-table-column>
-            </el-table>
-          </div>
-           <div class="pagination">
-            <el-pagination
-              layout="total, prev, pager, next"
-              :total="10"
-              :current-page="1"
-            ></el-pagination>
-          </div>
-        </div>
-
-        <!-- ================= 图三：外出申请列表 ================= -->
-        <div v-else-if="currentView === 'out'" class="view-container">
-          <div class="page-header">
-            <el-button type="primary" icon="ArrowLeft" @click="backToList">返回</el-button>
-            <span class="page-title">外出申请列表</span>
-            <el-button type="success" style="margin-left: auto;">新建外出申请</el-button>
-          </div>
-
-          <div class="table-container">
-            <el-table :data="outRequestList" style="width: 100%" border stripe>
-              <el-table-column prop="id" label="序号" width="60" align="center"></el-table-column>
-              <el-table-column prop="customerName" label="客户姓名" align="center"></el-table-column>
-              <el-table-column prop="reason" label="外出事由" align="center"></el-table-column>
-              <el-table-column prop="startTime" label="外出时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="endTime" label="预计回院时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="actualReturnTime" label="实际回院时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="companion" label="陪同人" width="100" align="center"></el-table-column>
-              <el-table-column prop="relation" label="与老人关系" width="100" align="center"></el-table-column>
-              <el-table-column prop="phone" label="陪同人电话" width="120" align="center"></el-table-column>
-              <el-table-column prop="status" label="审批状态" width="100" align="center">
-                <template #default="{ row }">
-                  <el-tag :type="getStatusType(row.status)">{{ row.status }}</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" width="150" align="center">
-                <template #default="{ row }">
-                  <el-button size="small" type="primary" link v-if="row.status === '通过'">登记回院</el-button>
-                  <el-button size="small" type="danger" link v-if="row.status === '已提交'">撤销</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-           <div class="pagination">
-            <el-pagination
-              layout="total, prev, pager, next"
-              :total="10"
-              :current-page="1"
-            ></el-pagination>
-          </div>
-        </div>
-
-        <!-- ================= 图四：退住申请列表 ================= -->
-        <div v-else-if="currentView === 'checkout'" class="view-container">
-          <div class="page-header">
-            <el-button type="primary" icon="ArrowLeft" @click="backToList">返回</el-button>
-            <span class="page-title">退住申请列表</span>
-            <el-button type="danger" style="margin-left: auto;">新建退住申请</el-button>
-          </div>
-
-          <div class="table-container">
-            <el-table :data="checkOutList" style="width: 100%" border stripe>
-              <el-table-column prop="id" label="序号" width="60" align="center"></el-table-column>
-              <el-table-column prop="customerName" label="客户姓名" align="center"></el-table-column>
-              <el-table-column prop="checkInTime" label="入住时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="checkOutTime" label="退住时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="type" label="退住类型" width="100" align="center"></el-table-column>
-              <el-table-column prop="reason" label="退住原因" align="center"></el-table-column>
-              <el-table-column prop="reviewTime" label="审批时间" width="180" align="center"></el-table-column>
-              <el-table-column prop="status" label="审批状态" width="100" align="center">
-                <template #default="{ row }">
-                   <el-tag :type="getStatusType(row.status)">{{ row.status }}</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="bedNo" label="床位" width="100" align="center"></el-table-column>
-              <el-table-column label="操作" width="100" align="center">
-                <template #default="{ row }">
-                  <el-button size="small" type="danger" link v-if="row.status === '已提交'">撤销申请</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-           <div class="pagination">
-            <el-pagination
-              layout="total, prev, pager, next"
-              :total="10"
-              :current-page="1"
-            ></el-pagination>
-          </div>
-        </div>
+        
 
       </div>
     </div>
 
-    <!-- ==================== 护理项目弹窗 (触发跳转的入口) ==================== -->
-    <el-dialog
-      v-model="careDialogVisible"
-      title="客户护理项目"
-      width="900px"
-      :close-on-click-modal="false"
-    >
-      <div class="dialog-header">
-        <div class="customer-info">
-          <strong>客户：</strong>{{ currentCustomer.name }}
-        </div>
-      </div>
-
-      <div class="project-table-container">
-        <el-table :data="projectList" style="width: 100%" border>
-          <el-table-column prop="id" label="序号" width="80" align="center"></el-table-column>
-          <el-table-column prop="customerName" label="客户" align="center"></el-table-column>
-          <el-table-column prop="code" label="护理项目编号" width="120" align="center"></el-table-column>
-          <el-table-column prop="name" label="护理项目名称" align="center"></el-table-column>
-          <el-table-column prop="price" label="价格" width="100" align="center"></el-table-column>
-          <el-table-column prop="remaining" label="余量" width="100" align="center"></el-table-column>
-          <el-table-column prop="expireDate" label="服务到期日期" width="120" align="center"></el-table-column>
-          <el-table-column label="状态" width="120" align="center">
-            <template #default="{ row }">
-              <div class="status-cell">
-                <span :class="['status', getStatusClass(row.status)]">{{ row.status }}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <!-- 操作列：点击按钮跳转到对应页面 -->
-          <el-table-column label="操作" width="260" align="center">
-            <template #default="{ row }">
-              <el-button size="small" type="primary" @click="jumpToNurse">护理</el-button>
-              <el-button size="small" type="success" @click="jumpToOut">外出</el-button>
-              <el-button size="small" type="danger" @click="jumpToCheckOut">退住</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <template #footer>
-        <el-button @click="careDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="careDialogVisible = false">确定</el-button>
-      </template>
-    </el-dialog>
+    <!-- ==================== 已删除护理项目弹窗 ==================== -->
    
   </div>
    
 </template>
 
 <script setup>
-import { ref, reactive,onMounted} from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
- import { ElMessageBox } from 'element-plus'
-   import { User } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
+import { User } from '@element-plus/icons-vue'
 
 const router = useRouter()
 // 用户信息
@@ -298,33 +143,6 @@ const clientList = ref([
 const total = ref(2)
 const currentPage = ref(1)
 
-// ================= 弹窗数据 =================
-const careDialogVisible = ref(false)
-const currentCustomer = ref({})
-const projectList = ref([
-  { id: 1, customerName: '孙瑞英', code: 'HLXM0001', name: '吸氧', price: '60元/次', remaining: -5, expireDate: '2024-01-17', status: '已欠费' },
-  { id: 2, customerName: '孙瑞英', code: 'HLXM0003', name: '测量血压', price: '免费', remaining: 2, expireDate: '2023-11-17', status: '即将用完' }
-])
-
-// ================= 图二数据 (护理记录) =================
-const nurseRecordList = ref([
-  { id: 1, customerName: '孙瑞英', projectName: '吸氧', quantity: 1, content: '常规吸氧护理', operator: '吴伟', time: '2023-11-24 10:00:00' },
-  { id: 2, customerName: '孙瑞英', projectName: '协助服药', quantity: 1, content: '饭后服药', operator: '吴伟', time: '2023-11-24 12:00:00' }
-])
-
-// ================= 图三数据 (外出申请) =================
-const outRequestList = ref([
-  { id: 1, customerName: '孙瑞英', reason: '回家探亲', startTime: '2023-11-13 09:00', endTime: '2023-11-14 18:00', actualReturnTime: '', companion: '孙丽', relation: '子女', phone: '13456786754', status: '通过' },
-  { id: 2, customerName: '孙瑞英', reason: '购买生活用品', startTime: '2023-11-10 14:00', endTime: '2023-11-10 17:00', actualReturnTime: '', companion: '孙丽', relation: '子女', phone: '13456786754', status: '不通过' },
-  { id: 3, customerName: '孙瑞英', reason: '参加社区活动', startTime: '2023-11-15 08:00', endTime: '2023-11-15 16:00', actualReturnTime: '', companion: '孙丽', relation: '子女', phone: '13456786754', status: '已提交' }
-])
-
-// ================= 图四数据 (退住申请) =================
-const checkOutList = ref([
-  { id: 1, customerName: '孙瑞英', checkInTime: '2023-11-10', checkOutTime: '2023-11-15', type: '正常退住', reason: '家里有事', reviewTime: '', status: '已提交', bedNo: '1201-1' },
-  { id: 2, customerName: '孙瑞英', checkInTime: '2023-11-10', checkOutTime: '2023-11-20', type: '保留床位', reason: '短期回家', reviewTime: '2023-12-30', status: '不通过', bedNo: '1201-1' },
-  { id: 3, customerName: '孙瑞英', checkInTime: '2023-11-10', checkOutTime: '2023-12-30', type: '死亡退住', reason: '自然离世', reviewTime: '2023-12-30', status: '已撤销', bedNo: '1201-1' }
-])
 
 // ================= 方法定义 =================
 
@@ -334,29 +152,6 @@ const searchClient = () => {
 }
 const handlePageChange = (page) => {
   currentPage.value = page
-}
-const openCareDialog = (row) => {
-  currentCustomer.value = row
-  careDialogVisible.value = true
-}
-
-// 弹窗中的跳转逻辑
-const jumpToNurse = () => {
-  careDialogVisible.value = false
-  currentView.value = 'nurse' // 切换到图二
-  activeTab.value = 'nurseRecord' // 同步顶部Tab
-}
-
-const jumpToOut = () => {
-  careDialogVisible.value = false
-  currentView.value = 'out' // 切换到图三
-  activeTab.value = 'clientout' // 同步顶部Tab
-}
-
-const jumpToCheckOut = () => {
-  careDialogVisible.value = false
-  currentView.value = 'checkout' // 切换到图四
-  // 注意：原顶部Tab没有退住，这里可以保持client或新增，暂不强制修改activeTab以免UI错位，或者你可以手动添加一个tab
 }
 
 // 返回逻辑
@@ -491,40 +286,6 @@ h3 {
   margin-left: 15px;
   color: #333;
 }
-
-/* 弹窗样式 */
-.dialog-header {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 15px;
-}
-
-.customer-info {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-}
-
-.project-table-container {
-  margin-bottom: 20px;
-}
-
-.status-cell {
-  text-align: center;
-}
-
-.status {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  display: inline-block;
-  text-align: center;
-}
-
-.status.overdue { background-color: red; color: white; }
-.status.normal { background-color: green; color: white; }
-.status.warning { background-color: orange; color: white; }
-.status.expired { background-color: darkred; color: white; }
 
 /* Tab 自定义样式 */
 .independent-tabs {

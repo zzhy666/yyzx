@@ -19,29 +19,12 @@ const initialTableData = reactive([
   { id: 6, levelName: '普通护理', levelStatus: 1, createDate: '2023-01-06' },
 ]);
 
-// 静态房间数据
-const staticRoomList = [
-  { roomNo: '101', floor: '一楼' },
-  { roomNo: '102', floor: '一楼' },
-  { roomNo: '103', floor: '一楼' },
-  { roomNo: '201', floor: '二楼' },
-  { roomNo: '202', floor: '二楼' },
-];
-
-// 静态床位数据
-const staticBedList = [
-  { bedId: 'BED_01', bedNo: '1号床' },
-  { bedId: 'BED_02', bedNo: '2号床' },
-  { bedId: 'BED_03', bedNo: '3号床' },
-];
-
 // --- 2. 响应式状态定义 ---
 
 // 表格显示的数据 (从初始数据复制一份用于分页展示)
 let tableData = reactive([]);
 
 // 弹窗控制
-let changeDialogvisible = ref(false);
 let reviseDialogvisible = ref(false);
 let addDialogVisible = ref(false); // 新增弹窗控制
 
@@ -54,24 +37,6 @@ let queryParam = reactive({
   },
   bedDetailsVo: {
     customerName: "", // 用于搜索过滤
-  }
-});
-
-// 调换床位表单数据
-let exchangeData = reactive({
-  exchangeForm: {
-    id: "",
-    customerName: "",
-    customerSex: "",
-    bedDetails: "",
-    startDate: "",
-    endDate: "",
-    oldRoomNo: "",
-    customerId: "",
-    newRoomNo: "",
-    newBedId: "",
-    oldBedId: "",
-    newRoomFloor: "一楼"
   }
 });
 
@@ -93,10 +58,6 @@ let formData = reactive({
   levelName: '',
   levelStatus: 1 // 默认启用
 });
-
-// 下拉框选项数据
-let roomList = reactive([]);
-let bedList = reactive([]);
 
 // --- 3. 纯前端逻辑函数 ---
 
@@ -189,64 +150,6 @@ function saveNewLevel() {
   ElMessage.success('护理级别添加成功！');
 }
 
-// --- 调换床位逻辑 ---
-
-function exchange(row) {
-  changeDialogvisible.value = true;
-
-  // 填充表单 (使用静态假数据补充缺失字段)
-  exchangeData.exchangeForm.id = row.id;
-  exchangeData.exchangeForm.customerName = row.levelName; // 借用级别名称作为名字展示
-  exchangeData.exchangeForm.customerSex = "男";
-  exchangeData.exchangeForm.bedDetails = row.levelName;
-  exchangeData.exchangeForm.startDate = "2023-10-01";
-  exchangeData.exchangeForm.endDate = "2023-10-10";
-  exchangeData.exchangeForm.oldRoomNo = "101";
-  exchangeData.exchangeForm.customerId = "CUST_" + row.id;
-  exchangeData.exchangeForm.oldBedId = "BED_OLD";
-  
-  // 重置新选择
-  exchangeData.exchangeForm.newRoomNo = "";
-  exchangeData.exchangeForm.newBedId = "";
-
-  // 加载房间列表
-  getAllRoomsByFloor();
-}
-
-function getAllRoomsByFloor() {
-  // 简单过滤静态数据
-  roomList.splice(0, roomList.length);
-  const filtered = staticRoomList.filter(r => r.floor === exchangeData.exchangeForm.newRoomFloor);
-  roomList.push(...filtered);
-}
-
-function getBed() {
-  // 只要选了房间，就显示所有静态床位 (简化逻辑)
-  bedList.splice(0, bedList.length);
-  bedList.push(...staticBedList);
-  exchangeData.exchangeForm.newBedId = ""; // 重置已选床位
-}
-
-function exchangeSave() {
-  console.log("执行前端保存:", exchangeData.exchangeForm);
-  
-  // 前端直接提示成功，不发送请求
-  ElMessage.success('床位调换成功 (前端模拟)');
-  changeDialogvisible.value = false;
-  
-  // 这里可以选择是否刷新列表，因为是静态数据，通常不需要变
-  // BedInfoData(); 
-}
-
-const handleConfirm = () => {
-  // 简单校验
-  if (!exchangeData.exchangeForm.newRoomNo || !exchangeData.exchangeForm.newBedId) {
-    ElMessage.warning('请选择房间和床位');
-    return;
-  }
-  exchangeSave();
-};
-
 // --- 修改/配置逻辑 ---
 
 function revise(row) {
@@ -322,7 +225,7 @@ const handleSaveConfirm = () => {
           </el-table-column>
           <el-table-column align="center" label="操作" width="300">
             <template #default="scoped">
-              <el-button type="primary" size="small" @click="exchange(scoped.row)">调换床位</el-button>
+              <!-- 已删除调换床位按钮 -->
               <el-button type="warning" size="small" @click="revise(scoped.row)">护理项目配置</el-button>
             </template>
           </el-table-column>
@@ -359,40 +262,6 @@ const handleSaveConfirm = () => {
       <span class="dialog-footer">
         <el-button @click="addDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="saveNewLevel">保存</el-button>
-      </span>
-    </template>
-  </el-dialog>
-
-  <!-- 调换床位弹窗 -->
-  <el-dialog v-model="changeDialogvisible" title="调换床位" width="400px">
-    <el-form :model="exchangeData.exchangeForm" label-width="80px">
-      <el-form-item label="当前级别">
-        <el-input v-model="exchangeData.exchangeForm.bedDetails" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="当前房间">
-        <el-input v-model="exchangeData.exchangeForm.oldRoomNo" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="目标楼层">
-        <el-select v-model="exchangeData.exchangeForm.newRoomFloor" @change="getAllRoomsByFloor" style="width: 100%">
-          <el-option label="一楼" value="一楼"></el-option>
-          <el-option label="二楼" value="二楼"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="目标房间">
-        <el-select v-model="exchangeData.exchangeForm.newRoomNo" @change="getBed" style="width: 100%" placeholder="请选择房间">
-          <el-option v-for="item in roomList" :key="item.roomNo" :label="item.roomNo" :value="item.roomNo"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="目标床位">
-        <el-select v-model="exchangeData.exchangeForm.newBedId" style="width: 100%" placeholder="请先选房间">
-          <el-option v-for="item in bedList" :key="item.bedId" :label="item.bedNo" :value="item.bedId"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="changeDialogvisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确定调换</el-button>
       </span>
     </template>
   </el-dialog>

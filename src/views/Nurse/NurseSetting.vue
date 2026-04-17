@@ -1,7 +1,7 @@
 <script setup lang="js">
 import { reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router';
 import loyat from '../loyat.vue';
 
 // ================= 1. 静态数据定义 (Mock Data) =================
@@ -16,7 +16,7 @@ const initialCustomerData = [
   { id: 6, customerName: '周八', customerAge: 85, customerSex: 1, roomNo: '105', buildingNo: '606', contactTel: '13800138006', levelName: '二级护理', bedId: 'B105-1', startDate: '2023-06-01', endDate: '2023-12-31', customerId: 'C006' },
 ];
 
-// 静态房间数据
+// 静态房间数据（保留但不再使用）
 const staticRoomList = [
   { roomNo: '101', floor: '一楼' },
   { roomNo: '102', floor: '一楼' },
@@ -25,7 +25,7 @@ const staticRoomList = [
   { roomNo: '202', floor: '二楼' },
 ];
 
-// 静态床位数据
+// 静态床位数据（保留但不再使用）
 const staticBedList = [
   { bedId: 'BED_01', bedNo: '1号床' },
   { bedId: 'BED_02', bedNo: '2号床' },
@@ -37,14 +37,6 @@ const staticBedList = [
 // 表格显示的数据
 let tableData = reactive([]);
 
-// 下拉框选项数据
-let roomList = reactive([]);
-let bedList = reactive([]);
-
-// 弹窗控制
-let changeDialogvisible = ref(false);
-let reviseDialogvisible = ref(false);
-
 // 查询参数
 let queryParam = reactive({
   pageInfoVo: {
@@ -55,24 +47,6 @@ let queryParam = reactive({
   },
   bedDetailsVo: {
     customerName: "",
-  }
-});
-
-// 调换床位表单数据
-let exchangeData = reactive({
-  exchangeForm: {
-    id: "",
-    customerName: "",
-    customerSex: "",
-    bedDetails: "",
-    startDate: "",
-    endDate: "",
-    oldRoomNo: "",
-    customerId: "",
-    newRoomNo: "",
-    newBedId: "",
-    oldBedId: "",
-    newRoomFloor: "一楼"
   }
 });
 
@@ -96,9 +70,9 @@ function BedInfoData() {
   // 1. 搜索过滤
   const keyword = queryParam.bedDetailsVo.customerName.toLowerCase();
   let filteredData = initialCustomerData;
-  
+
   if (keyword) {
-    filteredData = initialCustomerData.filter(item => 
+    filteredData = initialCustomerData.filter(item =>
       item.customerName.toLowerCase().includes(keyword)
     );
   }
@@ -140,64 +114,6 @@ function btnQuery() {
   queryParam.pageInfoVo.currentPage = 1; // 重置到第一页
   BedInfoData();
 }
-
-// --- 调换床位逻辑 ---
-
-function exchange(row) {
-  changeDialogvisible.value = true;
-
-  // 填充表单
-  exchangeData.exchangeForm.id = row.id;
-  exchangeData.exchangeForm.customerName = row.customerName;
-  exchangeData.exchangeForm.customerSex = row.customerSex;
-  exchangeData.exchangeForm.bedDetails = row.levelName;
-  exchangeData.exchangeForm.roomNo = row.roomNo;
-  exchangeData.exchangeForm.startDate = row.startDate;
-  exchangeData.exchangeForm.endDate = row.endDate;
-  exchangeData.exchangeForm.oldRoomNo = row.roomNo;
-  exchangeData.exchangeForm.customerId = row.customerId;
-  exchangeData.exchangeForm.oldBedId = row.bedId;
-  
-  // 重置新选择
-  exchangeData.exchangeForm.newRoomNo = "";
-  exchangeData.exchangeForm.newBedId = "";
-
-  // 加载房间列表
-  getAllRoomsByFloor();
-}
-
-function getAllRoomsByFloor() {
-  // 简单过滤静态数据
-  roomList.splice(0, roomList.length);
-  const filtered = staticRoomList.filter(r => r.floor === exchangeData.exchangeForm.newRoomFloor);
-  roomList.push(...filtered);
-}
-
-function getBed() {
-  // 只要选了房间，就显示所有静态床位 (简化逻辑)
-  bedList.splice(0, bedList.length);
-  bedList.push(...staticBedList);
-  exchangeData.exchangeForm.newBedId = ""; // 重置已选床位
-}
-
-function exchangeSave() {
-  console.log("执行前端保存:", exchangeData.exchangeForm);
-  
-  // 前端直接提示成功
-  ElMessage.success('床位调换成功 (前端模拟)');
-  changeDialogvisible.value = false;
-  
-  // 可选：刷新列表
-  // BedInfoData(); 
-}
-
-const handleConfirm = () => {
-  if (!exchangeData.exchangeForm.newRoomNo || !exchangeData.exchangeForm.newBedId) {
-    ElMessage.warning('请选择房间和床位');
-    return;
-  }
-  exchangeSave();
-};
 
 // --- 修改/配置逻辑 ---
 
@@ -277,7 +193,7 @@ const handleSaveConfirm = () => {
           <el-table-column align="center" prop="levelName" label="护理级别" width="120" />
           <el-table-column align="center" label="操作" width="200">
             <template #default="scoped">
-              <el-button type="primary" size="small" @click="exchange(scoped.row)">调换床位</el-button>
+              <!-- 已删除调换床位按钮 -->
               <el-button type="warning" size="small" @click="revise(scoped.row)">修改信息</el-button>
             </template>
           </el-table-column>
@@ -297,40 +213,6 @@ const handleSaveConfirm = () => {
       </el-main>
     </el-container>
   </div>
-
-  <!-- 调换床位弹窗 -->
-  <el-dialog v-model="changeDialogvisible" title="调换床位" width="400px">
-    <el-form :model="exchangeData.exchangeForm" label-width="80px">
-      <el-form-item label="当前客户">
-        <el-input v-model="exchangeData.exchangeForm.customerName" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="当前房间">
-        <el-input v-model="exchangeData.exchangeForm.oldRoomNo" disabled></el-input>
-      </el-form-item>
-      <el-form-item label="目标楼层">
-        <el-select v-model="exchangeData.exchangeForm.newRoomFloor" @change="getAllRoomsByFloor" style="width: 100%">
-          <el-option label="一楼" value="一楼"></el-option>
-          <el-option label="二楼" value="二楼"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="目标房间">
-        <el-select v-model="exchangeData.exchangeForm.newRoomNo" @change="getBed" style="width: 100%" placeholder="请选择房间">
-          <el-option v-for="item in roomList" :key="item.roomNo" :label="item.roomNo" :value="item.roomNo"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="目标床位">
-        <el-select v-model="exchangeData.exchangeForm.newBedId" style="width: 100%" placeholder="请先选房间">
-          <el-option v-for="item in bedList" :key="item.bedId" :label="item.bedNo" :value="item.bedId"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="changeDialogvisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确定调换</el-button>
-      </span>
-    </template>
-  </el-dialog>
 
   <!-- 修改信息弹窗 -->
   <el-dialog v-model="reviseDialogvisible" title="修改护理信息" width="400px">
