@@ -2,7 +2,7 @@
   <div class="healthy-container">
     <div class="main-content">
       <div class="page-header">
-        <h2 class="page-title">健康管家 → 设置服务对象</h2>
+        <h2 class="page-title">设置服务对象</h2>
       </div>
 
       <div class="toolbar">

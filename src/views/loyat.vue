@@ -37,7 +37,7 @@
         <span >健康管家</span>
       </template>
       <el-menu-item index="5-1" @click="gotoHealthy">设置服务对象</el-menu-item>
-      <el-menu-item index="5-2">服务关注</el-menu-item>
+      <el-menu-item index="5-2"@click="gotoHealthyHeader" >服务关注</el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="6">
       <template #title>
@@ -190,6 +190,9 @@ const handleLogout = () => {
 
     const gotoHealthy = () => {
     router.push({ name: 'healthy' })
+    }
+    const gotoHealthyHeader = () => {
+    router.push({ name: 'healthyHeader' })
     }
     const gotoClientOut =() =>{
       router.push({ name: 'clientout' })

@@ -3,7 +3,7 @@
     <!-- 右侧主内容区（全屏） -->
     <div class="main-content">
       <div class="page-header">
-        <h2 class="page-title">健康管家 → {{ currentPage }}</h2>
+        <h2 class="page-title"></h2>
 
         <!-- 👇 新加：页面切换按钮 -->
         <div class="switch-buttons" style="margin-top: 10px;">

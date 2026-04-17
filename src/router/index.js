@@ -33,6 +33,7 @@ const routes = [
     name:'hugong',
     component:Hugong
   },
+  
 {
     path:'/loyat',
     name:'loyat',
@@ -42,7 +43,7 @@ const routes = [
       name:'bed',
       components:{
         default: Bed,   
-        header: BedHeader 
+        
       }
     },
     {
@@ -50,7 +51,7 @@ const routes = [
       name:'bedmanagement',
       components:{
       default: BedManagement,
-      header: BedHeader 
+   
     }
     },
     {
@@ -58,14 +59,14 @@ const routes = [
       name:'client',
       components:{
         default: Client,   
-        header: ClientHeader 
+        
       }
     },{
       path:'clientout',
       name:'clientout',
       components:{
         default: Clientout,   
-        header: ClientHeader  
+         
       }
     },
     {
@@ -73,7 +74,7 @@ const routes = [
       name:'clientoff',
       components:{
         default: Clientoff,   
-        header: ClientHeader  
+        
     },
   },
     {
@@ -81,7 +82,7 @@ const routes = [
       name:'basicdate',
       components:{
         default: Basicdata,  
-        header: BasicdataHeader 
+        
       }
     },
     {
@@ -119,11 +120,17 @@ const routes = [
     {
       path:'healthy',
       name:'healthy',
-      components:{
-        default: Healthy,
-        header: HealthyHeader 
+     components:{
+        default: Healthy
+          
       }
-    }
+    },
+    {
+    path:'healthyHeader',
+    name:'healthyHeader',
+    component:HealthyHeader
+  },
+    
   ]
     }
     
