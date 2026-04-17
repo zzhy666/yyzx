@@ -21,6 +21,21 @@
       <!-- 顶部 Tab 栏 -->
        <img src="/image/5.png" style="position:relative; left: -600px;"></img>
      <p class="wenzi">欢迎登录护工页面{{  }}</p>
+     <div class="welcome-section" style="position: relative;left: 1500px;top: -120px; ">
+          <el-icon><User /></el-icon>
+          <span class="welcome-text">欢迎，{{ currentUsername }}！</span>
+          <el-tag type="info" size="small" style="margin-left: 8px;">
+            {{ userType }}
+          </el-tag>
+          <el-button 
+            type="danger" 
+            size="small" 
+            @click="handleLogout"
+            style="margin-left: 10px;"
+          >
+            退出
+          </el-button>
+        </div>
 
       <!-- 内容区域：根据 currentView 动态显示不同页面 -->
       <div class="content">
@@ -223,16 +238,51 @@
         <el-button type="primary" @click="careDialogVisible = false">确定</el-button>
       </template>
     </el-dialog>
+   
   </div>
+   
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive,onMounted} from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue' // 确保图标已注册或全局可用
+ import { ElMessageBox } from 'element-plus'
+   import { User } from '@element-plus/icons-vue'
 
 const router = useRouter()
+// 用户信息
+const currentUsername = ref('')
+const userType = ref('')
+
+// 页面加载时获取用户信息
+onMounted(() => {
+  const username = localStorage.getItem('currentUsername')
+  const type = localStorage.getItem('userType')
+  
+  if (username) {
+    currentUsername.value = username
+    userType.value = type || '管理员'
+  } else {
+    // 如果没有登录信息，跳转到登录页
+    router.push('/login')
+  }
+})
+
+// 退出登录
+const handleLogout = () => {
+  ElMessageBox.confirm('确定要退出登录吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 清除登录信息
+    localStorage.removeItem('currentUsername')
+    localStorage.removeItem('userType')
+    
+    // 跳转到登录页
+    router.push('/login')
+  })
+}
 
 // ================= 状态管理 =================
 // currentView 控制主内容区显示哪个页面: 'list'(图1), 'nurse'(图2), 'out'(图3), 'checkout'(图4)
@@ -508,5 +558,27 @@ h3 {
   font-size: 16pxpx;
   position: relative;
   left: 50px;
+}
+.welcome-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f0f9ff;
+  border-radius: 6px;
+  border: 1px solid #d9ecff;
+  white-space: nowrap; 
+  background: transparent;
+}
+
+.welcome-section .el-icon {
+  color: #409eff;
+  font-size: 18px;
+}
+
+.welcome-text {
+  color: #409eff;
+  font-weight: 500;
+  font-size: 14px;
 }
 </style>

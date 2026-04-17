@@ -246,7 +246,8 @@ box-sizing: border-box;
   background-color: #f0f9ff;
   border-radius: 6px;
   border: 1px solid #d9ecff;
-  white-space: nowrap; /* 防止换行 */
+  white-space: nowrap; 
+  background: transparent;
 }
 
 .welcome-section .el-icon {
