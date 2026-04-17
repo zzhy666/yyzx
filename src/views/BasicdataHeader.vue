@@ -5,6 +5,7 @@
   mode="horizontal"
   @select="handleSelect">
   <el-menu-item index="1">基础数据维护</el-menu-item>
+  <el-menu-item index="2">暂无</el-menu-item>
   <el-sub-menu index="2"> 暂无</el-sub-menu>
 </el-menu>
 </div>
