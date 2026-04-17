@@ -10,7 +10,7 @@ import BasicdataHeader from '../views/BasicdataHeader.vue'
 import NurseItem from '../views/Nurse/NurseItem.vue'
 import Healthy from '../views/Healthy.vue'
 import HealthyHeader from '../views/HealthyHeader.vue'
-import NurseHeader from '../views/Nurse/NurseHeader.vue'
+
 import NurseLevel from '../views/Nurse/NurseLevel.vue'
 import NurseRecords from '../views/Nurse/NurseRecords.vue'
 import NurseSetting from '../views/Nurse/NurseSetting.vue'
@@ -88,32 +88,32 @@ const routes = [
       path:'nurseItem',
       name:'nurseItem',
       components:{
-        default: NurseItem,
-        header: NurseHeader   
+        default: NurseItem
+           
       }
     },
     {
       path:'nurseLevel',
       name:'nurseLevel',
       components:{
-        default: NurseLevel,
-        header: NurseHeader   
+        default: NurseLevel
+          
       }
     },
     {
       path:'nurseRecords',
       name:'nurseRecords',
       components:{
-        default: NurseRecords,
-        header: NurseHeader   
+        default: NurseRecords
+           
       }
     },
     {
       path:'nurseSetting',
       name:'nurseSetting',
       components:{
-        default: NurseSetting,
-        header: NurseHeader   
+        default: NurseSetting
+          
       }
     },
     {
