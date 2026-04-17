@@ -45,6 +45,9 @@
       <div v-if="currentFloor === 1" style="color:#6c757d; margin-bottom:15px; font-size:14px;">
         说明：本层设有活动区、护士站等公共区域，故房间数为13间。
       </div>
+      <div v-if="currentFloor === 4" style="color:#6c757d; margin-bottom:15px; font-size:14px;">
+        说明：本层设有其他房间的洗衣房等区域。
+      </div>
 
       <!-- 网格布局容器 -->
       <div class="floor-plan-grid-static">
@@ -317,6 +320,7 @@ onMounted(() => {
   // 4. 手动刷新一次当前楼层数据
   handleFloorChange()
 });
+
 </script>
 
 
