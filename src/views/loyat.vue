@@ -1,5 +1,5 @@
 <template>
-    <div class="main-loyat">
+    <div class="main-loyat" >
        <div class="left-side" >
         <h3>东软颐养中心</h3>
         <img src="/image/1.jpg" width="150" height="150">
@@ -122,7 +122,7 @@
     import { ElMessageBox } from 'element-plus'
    import { User } from '@element-plus/icons-vue'
     const router = useRouter()
-const activeTab = ref('client')
+const activeTab = ref('bed')
 
 // 用户信息
 const currentUsername = ref('')
@@ -145,7 +145,6 @@ onMounted(() => {
 // 标签页关闭处理
 const handleTabRemove = (targetName) => {
   console.log('关闭标签:', targetName)
-  // 如果关闭的是当前激活的标签页，默认跳转到床位示意图
   if (targetName === activeTab.value) {
     activeTab.value = 'bed'
   }

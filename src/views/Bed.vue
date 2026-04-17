@@ -3,7 +3,7 @@
     <div class="top-controls">
         <label style="margin-right: 50px;">
       <span >楼层：</span>
-        <el-select v-model="currentFloor" style="width: 300px; position: relative; left: 5px; top: -2px;">
+        <el-select v-model="currentFloor" style="width: 300px; position: relative; left: 5px; top: -2px;"@change="handleFloorChange">
            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
     </label>
@@ -186,6 +186,32 @@ const floorLayouts = {
     { id: '4-18', type: 'room', roomCode: '418', gridColumn: '6', gridRow: '3' },
   ],
 };
+const handleFloorChange = () => {
+  console.log('切换楼层，检查数据更新...')
+  const savedData = localStorage.getItem('customerBedList')
+  if (savedData) {
+    allBeds.value = JSON.parse(savedData).map(bed => ({
+      id: bed.id,
+      floor: parseInt(bed.roomCode.charAt(0)),
+      roomCode: bed.roomCode,
+      bedLabel: bed.bedLabel,
+      bedCode: bed.bedCode,
+      status: bed.status,
+      customerName: bed.customerName
+    }))
+  }
+  console.log('当前楼层数据已更新')
+}
+
+// 添加监听 localStorage 变化的函数
+const listenToDataChanges = () => {
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'customerBedList') {
+      console.log('检测到 localStorage 数据变化，自动刷新床位数据')
+      handleFloorChange()  // 数据变化时自动刷新
+    }
+  })
+}
 const initializeBedData = () => {
   const beds = [];
   let bedId = 1;
@@ -257,7 +283,7 @@ const currentFloorLayout = computed(() => {
   });
 });
 
-// 工具函数（保持不变）
+// 工具函数
 const getBedImage = (status) => ({ available: '/image/kx.png', occupied: '/image/lc.png', out: '/image/wc.png' }[status] || '/image/kx.png');
 const getStatusText = (status) => ({ occupied: '有人', available: '空闲', out: '外出' }[status] || status);
 const getStatusColor = (status) => ({ occupied: '#f56c6c', available: '#67c23a', out: '#e6a23c' }[status] || '#909399');
@@ -266,6 +292,30 @@ const getStatusColor = (status) => ({ occupied: '#f56c6c', available: '#67c23a',
 onMounted(() => {
   console.log('组件挂载，初始化数据...');
   initializeBedData();
+  const savedData = localStorage.getItem('customerBedList')
+  if (savedData) {
+    console.log('从 localStorage 找到床位数据，覆盖默认数据')
+    try {
+      const bedData = JSON.parse(savedData)
+      allBeds.value = bedData.map(bed => ({
+        id: bed.id,
+        floor: parseInt(bed.roomCode.charAt(0)),
+        roomCode: bed.roomCode,
+        bedLabel: bed.bedLabel,
+        bedCode: bed.bedCode,
+        status: bed.status,
+        customerName: bed.customerName
+      }))
+    } catch (error) {
+      console.error('解析 localStorage 数据失败:', error)
+    }
+  }
+  
+  // 3. 开始监听数据变化
+  listenToDataChanges()
+  
+  // 4. 手动刷新一次当前楼层数据
+  handleFloorChange()
 });
 </script>
 

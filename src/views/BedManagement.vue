@@ -32,6 +32,7 @@
           <th>使用起始时间</th>
           <th>使用结束时间</th>
           <th>状态</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -57,6 +58,19 @@
                  item.status === 'out' ? '外出' : '空闲' }}
             </span>
           </td>
+          <td align="center">
+          <!-- 新增删除按钮 -->
+          <el-button 
+            v-if="item.status === 'occupied' || item.status === 'out'"
+            type="danger" 
+            size="small" 
+            @click="handleDeleteCustomer(item)"
+            :loading="deleteLoadingId === item.id"
+          >
+            删除
+          </el-button>
+          <span v-else style="color: #999; font-size: 12px;">--</span>
+        </td>
         </tr>
       </tbody>
     </table>
@@ -157,9 +171,69 @@
 </template>
 
 <script setup>
-    import {ref,reactive,computed} from 'vue'
-    import { ElMessage } from 'element-plus'
+    import {ref,reactive,computed,onMounted} from 'vue'
+    import { ElMessage, ElMessageBox } from 'element-plus'
     //折叠的是客户数据
+    const deleteLoadingId = ref(null)
+    const handleDeleteCustomer = (bed) => {
+  // 确认删除对话框
+  ElMessageBox.confirm(
+    `确定要删除客户 "${bed.customerName}" 吗？删除后该床位将变为空闲状态。`,
+    '删除确认',
+    {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(async () => {
+    // 设置加载状态
+    deleteLoadingId.value = bed.id
+    
+    try {
+      // 1. 在本地数据中找到该床位
+      const bedIndex = customerBedList.value.findIndex(item => item.id === bed.id)
+      
+      if (bedIndex === -1) {
+        throw new Error('未找到对应的床位记录')
+      }
+      
+      // 2. 重置床位状态为"空闲"，清空客户信息
+      customerBedList.value[bedIndex] = {
+        ...customerBedList.value[bedIndex],
+        customerName: '',
+        customerGender: '',
+        checkInTime: '',
+        checkOutTime: '',
+        status: 'available'
+      }
+      
+      // 3. 保存到 localStorage
+      localStorage.setItem('customerBedList', JSON.stringify(customerBedList.value))
+      
+      // 4. 触发数据更新事件，通知床位示意图页面
+      window.dispatchEvent(new CustomEvent('bed-data-updated'))
+      
+      // 5. 显示成功消息
+      ElMessage.success(`已删除客户 "${bed.customerName}"，床位 ${bed.roomCode}-${bed.bedLabel} 已恢复为空闲状态`)
+      
+    } catch (error) {
+      console.error('删除客户失败:', error)
+      ElMessage.error(`删除失败: ${error.message}`)
+    } finally {
+      // 清除加载状态
+      deleteLoadingId.value = null
+      
+      // 6. 检查是否需要调整分页
+      // 如果当前页没有数据了，且不是第一页，则返回上一页
+      if (paginatedBedList.value.length === 0 && currentPage.value > 1) {
+        currentPage.value -= 1
+      }
+    }
+  }).catch(() => {
+    // 用户取消了删除
+    console.log('用户取消了删除操作')
+  })
+}
   const customerBedList = ref([
   // 占用客户 (前70个床位中的一部分，入住时间打乱)
   { id: 1, customerName: '张三', customerGender: '男', roomCode: '101', bedLabel: 'A', bedCode: '101-A', checkInTime: '2024-03-01', checkOutTime: '', status: 'occupied' },
@@ -442,7 +516,10 @@ const handleAddCustomer = () => {
         checkOutTime: '', // 清空结束时间
         status: 'occupied' // 更新为占用状态
       }
+      localStorage.setItem('customerBedList', JSON.stringify(customerBedList.value))
       
+      // 触发自定义事件，告诉其他页面数据更新了
+      window.dispatchEvent(new CustomEvent('bed-data-updated'))
       // 重置表单
       newCustomerForm.value = {
         customerName: '',
@@ -494,6 +571,17 @@ const goToPage = (pageNumber) => {
     currentPage.value = pageNumber
   }
 }
+onMounted(() => {
+  const savedData = localStorage.getItem('customerBedList')
+  if (savedData) {
+    try {
+      customerBedList.value = JSON.parse(savedData)
+      console.log(`从 localStorage 恢复 ${customerBedList.value.length} 条床位数据`)
+    } catch (error) {
+      console.error('恢复数据失败:', error)
+    }
+  }
+})
 
 </script>
 
